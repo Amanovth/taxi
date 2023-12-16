@@ -2,4 +2,5 @@ env
 .env
 static
 media
-db.sqlite
+db.sqlite3
+.idea
