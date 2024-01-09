@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 
 
 class Driver(models.Model):
+    models.TextChoices
     STATUS_CHOICES = (
         (1, 'В пути'),
         (2, 'Свободен'),

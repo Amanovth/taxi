@@ -1,4 +1,5 @@
 from rest_framework import status, generics, permissions
+from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authtoken.models import Token
@@ -95,3 +96,16 @@ class UpdateFullNameView(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        try:
+            token = Token.objects.get(user=user)
+            token.delete()
+            return Response({'response': True})
+        except ObjectDoesNotExist:
+            return Response({'response': False}, status=status.HTTP_400_BAD_REQUEST)
