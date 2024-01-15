@@ -4,14 +4,13 @@ from django.contrib.auth import get_user_model
 
 
 class Driver(models.Model):
-    models.TextChoices
     STATUS_CHOICES = (
         (1, 'В пути'),
         (2, 'Свободен'),
         (3, 'Не на линии'),
     )
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    car_tariff = models.OneToOneField('Auto', on_delete=models.CASCADE, verbose_name=_('Тариф'))
+    car_tariff = models.OneToOneField('Tariff', on_delete=models.CASCADE, verbose_name=_('Тариф'))
     car_brand = models.CharField(_('Марка машины'), max_length=255)
     car_model = models.CharField(_('Модель автомобиля'), max_length=255)
     car_color = models.CharField(_('Цвет автомобиля'), max_length=255)
@@ -24,8 +23,8 @@ class Driver(models.Model):
         return f"{self.car_color} {self.car_brand} {self.car_model}, {self.user.first_name} {self.user.last_name}"
 
 
-class Auto(models.Model):
-    tariff = models.CharField(_('Тариф'), max_length=255)
+class Tariff(models.Model):
+    name = models.CharField(_('Тариф'), max_length=255)
     car_icon = models.ImageField(_('Изображение автомобиля'), upload_to='car_icons')
     get_into = models.IntegerField(_('Посадка в авто'))
     free_waiting = models.IntegerField(_('Бесплатное ожидание'), help_text='В минутах')
@@ -43,7 +42,7 @@ class Auto(models.Model):
     waiting_on_the_way = models.IntegerField(_('Ожидание в пути'), help_text='не более x сом/мин')
 
     def __str__(self):
-        return f'Тариф - {self.tariff}'
+        return f'Тариф - {self.name}'
 
     class Meta:
         verbose_name = _('Тариф')

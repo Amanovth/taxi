@@ -1,34 +1,16 @@
 from geopy.distance import distance
+from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Driver
-from .serializers import NearestDriversListSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import ListAPIView
+from .models import Driver, Tariff
+from .serializers import NearestDriversListSerializer, CheckSerializer
 
 
-class NearestDriversListAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        passenger_latitude = request.data.get('lat')
-        passenger_longitude = request.data.get('lon')
-
-        drivers = Driver.objects.all()
-
-        distances = [
-            (driver, distance((driver.lat, driver.lon), (passenger_latitude, passenger_longitude)).km)
-            for driver in drivers
-        ]
-
-        nearest_positions = sorted(distances, key=lambda x: x[1])[:5]
-
-        serializer = NearestDriversListSerializer(
-            [driver for driver, _ in nearest_positions],
-            many=True,
-            context={'request': request}
-        )
-
-        return Response(serializer.data)
-
-
-from django.shortcuts import render
+class NearestDriversListAPIView(ListAPIView):
+    serializer_class = NearestDriversListSerializer
+    queryset = Driver.objects.all()
 
 
 def index(request):
@@ -37,3 +19,15 @@ def index(request):
 
 def room(request, room_name):
     return render(request, "room.html", {"room_name": room_name})
+
+
+class CheckAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated, ]
+    queryset = Tariff.objects.all()
+    serializer_class = CheckSerializer
+
+    def get(self, request, *args, **kwargs):
+        from_ = self.request.data.get("from")
+        to_ = self.request.data.get("to")
+
+        return self.list(request, *args, **kwargs)

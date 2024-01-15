@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Auto, Driver
+from .models import Tariff, Driver
 
 
-admin.site.register(Auto)
+admin.site.register(Tariff)
 admin.site.register(Driver)
