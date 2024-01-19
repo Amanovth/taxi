@@ -8,7 +8,7 @@ from .views import (
 
 urlpatterns = [
     path('nearestdrivers', NearestDriversListAPIView.as_view(), name='nearestdrivers'),
-    path("", index, name="index"),
-    path("<str:room_name>/", room, name="room"),
-    # path("check", CheckAPIView.as_view(), name="check")
+    # path("", index, name="index"),
+    # path("<str:room_name>/", room, name="room"),
+    path("check", CheckAPIView.as_view(), name="check")
 ]
