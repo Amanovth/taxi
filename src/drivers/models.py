@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
-
 class Driver(models.Model):
     STATUS_CHOICES = (
         (1, 'В пути'),
@@ -15,12 +14,20 @@ class Driver(models.Model):
     car_model = models.CharField(_('Модель автомобиля'), max_length=255)
     car_color = models.CharField(_('Цвет автомобиля'), max_length=255)
     driver_photo = models.ImageField(_('Фото водителя'), upload_to='driver_photos', default='driver_photos/driver.png')
+    number_auto = models.IntegerField(_('Регистрационный номер автомобиля'))
+    star = models.IntegerField(_('Оценки водителя'), blank=True)
+    name = models.CharField(_('Имя водителя'), max_length=55)
     lat = models.FloatField(null=True, blank=True)
     lon = models.FloatField(null=True, blank=True)
     status = models.IntegerField(_('Статус'), default=2, choices=STATUS_CHOICES)
 
     def __str__(self):
         return f"{self.car_color} {self.car_brand} {self.car_model}, {self.user.first_name} {self.user.last_name}"
+
+
+    class Meta:
+        verbose_name = 'Водитель'
+        verbose_name_plural = 'Водители'
 
 
 class Tariff(models.Model):
@@ -47,3 +54,4 @@ class Tariff(models.Model):
     class Meta:
         verbose_name = _('Тариф')
         verbose_name_plural = _('Тарифы')
+

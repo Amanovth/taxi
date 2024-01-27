@@ -9,6 +9,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('src.users.urls')),
     path('', include('src.drivers.urls')),
+    path('', include('src.rental.urls')),
+    
 ]
 
 urlpatterns += docs

@@ -4,11 +4,13 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from .serializers import (
     RegisterSerializer,
     VerifyPhoneSerializer,
-    UpdateFullNameSerializer
+    UpdateFullNameSerializer,
+    LoginSerializer,
 )
 from .models import User
 from .services import send_sms
@@ -109,3 +111,45 @@ class LogoutView(APIView):
             return Response({'response': True})
         except ObjectDoesNotExist:
             return Response({'response': False}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class LoginAPIView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+
+        if serializer.is_valid():
+            phone = request.data.get("phone")
+            password = request.data.get("password")
+
+            try:
+                get_user = User.objects.get(phone=phone)
+            except ObjectDoesNotExist:
+                return Response(
+                    {
+                        "response": False,
+                        "message": "Пользователь с указанным телефонным номером уже существует",
+                    }
+                )
+
+            user = authenticate(request, phone=phone, password=password)
+
+            if not user:
+                return Response(
+                    {
+                        "response": False,
+                        "message": "Невозможно войти в систему с указанным номером телефона",
+                    }
+                )
+
+            if user.is_verified:
+                token, created = Token.objects.get_or_create(user=user)
+                return Response(
+                    {
+                        "response": True,
+                        "isactivated": True,
+                        "token": token.key,
+                        "phone": user.phone,
+                    }
+                )
+        
+        return Response(serializer.errors)

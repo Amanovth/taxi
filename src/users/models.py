@@ -6,11 +6,16 @@ from .managers import CustomUserManager
 
 
 class User(AbstractUser):
+    USER_TYPE_CHOICES = (
+        ("customer", _("Клиент")),
+        ("driver", _("Таксист"))
+    )
     username = None
-    phone = models.CharField(_('Телефон'), unique=True, max_length=12)
-
-    code = models.IntegerField('Код активации', null=True, blank=True)
-    activated = models.BooleanField('Активировано', default=False)
+    
+    phone = models.CharField(_('Телефон номер'), unique=True, max_length=12)
+    user_type = models.CharField(_('Статус'), choices=USER_TYPE_CHOICES, default="customer")
+    code = models.IntegerField(_('Код активации'), null=True, blank=True)
+    activated = models.BooleanField(_('Активировано'), default=False)
 
     # Bank card
     card_num = models.IntegerField(_('Номер карты'), null=True, blank=True)

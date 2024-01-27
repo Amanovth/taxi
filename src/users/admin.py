@@ -10,7 +10,7 @@ admin.site.unregister(TokenProxy)
 @admin.register(User)
 class UserAdmin(UserAdmin):
     fieldsets = (
-        (None, {'fields': ('phone', 'password', 'code', 'activated')}),
+        (None, {'fields': ('user_type', 'phone', 'password', 'code', 'activated')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
         (_('Bank card'), {'fields': ('card_num', 'valid', 'cvv')}),
         (
@@ -37,6 +37,6 @@ class UserAdmin(UserAdmin):
         ),
     )
 
-    list_display = ('id', 'phone', 'first_name', 'last_name', 'last_login',)
+    list_display = ('id', 'phone', 'user_type', 'first_name', 'last_name', 'last_login',)
     list_display_links = ('id', 'phone',)
     ordering = ('-id',)
