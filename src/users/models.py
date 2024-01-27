@@ -12,7 +12,7 @@ class User(AbstractUser):
     )
     username = None
     
-    phone = models.CharField(_('Телефон номер'), unique=True, max_length=12)
+    phone = models.CharField(_('Телефон номер'), unique=True, max_length=30)
     user_type = models.CharField(_('Статус'), choices=USER_TYPE_CHOICES, default="customer")
     code = models.IntegerField(_('Код активации'), null=True, blank=True)
     activated = models.BooleanField(_('Активировано'), default=False)

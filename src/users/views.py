@@ -49,6 +49,57 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+class LoginView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+
+        if serializer.is_valid():
+            phone = request.data.get("phone")
+            password = request.data.get("password")
+
+            try:
+                get_user = User.objects.get(phone=phone)
+            except ObjectDoesNotExist:
+                return Response(
+                    {
+                        "response": False,
+                        "message": "Пользователь с таким номером не существует",
+                    }
+                )
+
+            user = authenticate(request, phone=phone, password=password)
+
+            if not user:
+                return Response(
+                    {
+                        "response": False,
+                        "message": "Неверный пароль или номер!",
+                    }
+                )
+
+            if user.activated:
+                token, created = Token.objects.get_or_create(user=user)
+                return Response(
+                    {
+                        "response": True,
+                        "message": "Вход в систему выполнен успешно",
+                        "token": token.key,
+                    }
+                )
+            return Response(
+                {
+                    "response": False,
+                    "message": "Подтвердите номер",
+                    "activated": False,
+                }
+            )
+
+        return Response(serializer.errors)
+    
+
 class VerifyPhoneView(generics.GenericAPIView):
     serializer_class = VerifyPhoneSerializer
 
@@ -112,44 +163,3 @@ class LogoutView(APIView):
         except ObjectDoesNotExist:
             return Response({'response': False}, status=status.HTTP_400_BAD_REQUEST)
         
-
-class LoginAPIView(APIView):
-    def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-
-        if serializer.is_valid():
-            phone = request.data.get("phone")
-            password = request.data.get("password")
-
-            try:
-                get_user = User.objects.get(phone=phone)
-            except ObjectDoesNotExist:
-                return Response(
-                    {
-                        "response": False,
-                        "message": "Пользователь с указанным телефонным номером уже существует",
-                    }
-                )
-
-            user = authenticate(request, phone=phone, password=password)
-
-            if not user:
-                return Response(
-                    {
-                        "response": False,
-                        "message": "Невозможно войти в систему с указанным номером телефона",
-                    }
-                )
-
-            if user.is_verified:
-                token, created = Token.objects.get_or_create(user=user)
-                return Response(
-                    {
-                        "response": True,
-                        "isactivated": True,
-                        "token": token.key,
-                        "phone": user.phone,
-                    }
-                )
-        
-        return Response(serializer.errors)

@@ -22,7 +22,7 @@ def room(request, room_name):
 
 
 class CheckAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated]
     queryset = Tariff.objects.all()
     serializer_class = CheckSerializer
 
