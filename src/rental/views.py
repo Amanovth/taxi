@@ -16,7 +16,7 @@ class CallView(generics.CreateAPIView):
 
 
 class CallListView(generics.ListAPIView):
-    queryset = Rental.objects.filter(status='waiting').order_by('-id')
+    queryset = Rental.objects.filter(status='request').order_by('-id')
     serializer_class = CallListSerializer
 
 
@@ -29,25 +29,12 @@ class AcceptCallView(generics.CreateAPIView):
         if request.user.user_type == "driver":
             try:
                 call = Rental.objects.get(pk=serializer.data["call_id"])
-                if call.status == "waiting":
-                    call.driver = request.user
-                    call.status = 'accept'
+                if call.status == "request":
+                    call.driver = request.user.driver
+                    call.status = 'driver-accepted'
                     call.save()
                     return Response({"response": True, "message": "Заказ принят!"}, status=status.HTTP_201_CREATED)
                 return Response({"response": False, "message": "Упс.. Вы не успели принять данный заказ"})
             except Rental.DoesNotExist:
                 return Response({"response": False, "message": "Обьект не существует!"}, status=status.HTTP_404_NOT_FOUND)
         return Response({"response": False, "message": "Вы не являетесь таксистом!"}, status=status.HTTP_403_FORBIDDEN)
-
-
-
-
-# class RentalListCreateView(generics.CreateAPIView):
-#     queryset = Rental.objects.all()
-#     serializer_class = RentalSerializer
-
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response({"response": True}, status=status.HTTP_201_CREATED)

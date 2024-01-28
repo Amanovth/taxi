@@ -21,11 +21,3 @@ class AcceptCallSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rental
         fields = ['call_id']
-
-
-
-# class RentalSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Rental
-#         fields = "__all__"
-#         exlude = ["route"]
