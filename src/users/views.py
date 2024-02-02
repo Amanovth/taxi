@@ -6,11 +6,11 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from .serializers import (
     RegisterSerializer,
     VerifyPhoneSerializer,
     UpdateFullNameSerializer,
-    LoginSerializer,
 )
 from .models import User
 from .services import send_sms
@@ -111,4 +111,10 @@ class LogoutView(APIView):
             return Response({'response': True})
         except ObjectDoesNotExist:
             return Response({'response': False}, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
+
+
+
+
+      

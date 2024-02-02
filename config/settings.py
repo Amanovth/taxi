@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django.contrib.gis',
     'rest_framework.authtoken',
     'rest_framework',
     'corsheaders',
@@ -151,3 +152,5 @@ NIKITA_PASSWORD = os.getenv('NITKITA_PASSWORD')
 NIKITA_SENDER = os.getenv('NITKITA_SENDER')
 
 API_KEY = os.getenv('API_KEY')
+YANDEX_API_KEY = os.getenv('YANDEX_API_KEY')
+
