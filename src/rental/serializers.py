@@ -79,6 +79,7 @@ class HistorySerializers(serializers.ModelSerializer):
     def get_text(self, obj):
         if obj.status == 'completed':
             return f'{obj.total_cost} сом, {obj.point_a_street} {obj.point_b_street}'
+        return f'Отменён'
 
 class HistoryDetailSerializers(serializers.ModelSerializer):
     star = serializers.SerializerMethodField()
