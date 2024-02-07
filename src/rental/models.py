@@ -9,7 +9,7 @@ from src.drivers.models import Driver, Tariff
 STATUS_CHOICES = (
     ('request', 'Запрос такси'),
     ('driver-accepted', 'Водитель принял'),
-    ('driver-en-route', 'Водитель в пути'),
+    ('driver-waiting', 'Водитель ждет'),
     ('on-the-way', 'В пути'),
     ('completed', 'Завершено'),
     ('cancelled', 'Отменено'),
@@ -27,6 +27,7 @@ class Rental(models.Model):
     lat_a = models.CharField(_("Широта А"), max_length=255)
     lon_a = models.CharField(_("Долгота А"), max_length=255)
 
+    
     point_b_street = models.CharField(_("Улица Б"), max_length=255, blank=True, null=True)
     lat_b = models.CharField(_("Широта Б"), max_length=255, blank=True, null=True)
     lon_b = models.CharField(_("Долгота Б"), max_length=255, blank=True, null=True)
@@ -43,3 +44,6 @@ class Rental(models.Model):
     class Meta:
         verbose_name = _("Поездка")
         verbose_name_plural = _("Поездки")
+
+
+    

@@ -31,3 +31,13 @@ class CheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tariff
         fields = "__all__"
+
+
+
+class RatingSerializers(serializers.ModelSerializer):
+    driver_id = serializers.IntegerField()
+    rating = serializers.IntegerField()
+
+    class Meta:
+        model = Driver
+        fields = ('driver_id', 'rating')
